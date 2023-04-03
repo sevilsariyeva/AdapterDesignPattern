@@ -122,10 +122,14 @@ namespace Adapter.ViewModels
             {
                 _converter = new Converter(adapter);
             }
-            public void Start(List<User>users)
+            public void Write(List<User>users)
             {
                 _converter.Write(users);
-                _converter.Read();
+                
+            }
+            public List<User> Read()
+            {
+                return _converter.Read();
             }
         }
         private string userName;
@@ -189,7 +193,6 @@ namespace Adapter.ViewModels
         public HomeUCViewModel()
         {
             
-            IAdapter adapter;
             SubmitClickCommand = new RelayCommand((obj) =>
             {
                 if (JsonWriterChecked || JsonReaderChecked || XMLWriterChecked || XMLReaderChecked)
@@ -198,15 +201,20 @@ namespace Adapter.ViewModels
                     var user = new User { UserName = UserName, Surname = Surname, Email = Email, Password = Password };
                     App.UserRepo.Users.Add(user);
                     var allUsers = App.UserRepo.Users;
+                    IAdapter adapter;
                     if (JsonWriterChecked)
                     {
                         Json json = new Json();
-                        json.Write(allUsers);
+                        adapter = new JsonAdapter(json);
+                        Application app = new Application(adapter);
+                        adapter.Write(allUsers);
                     }
                     else if (JsonReaderChecked)
                     {
                         Json json = new Json();
-                        var myuser = json.Read();
+                        adapter = new JsonAdapter(json);
+                        Application app = new Application(adapter);
+                        var myuser=adapter.Read();
                         UserName = myuser[myuser.Count - 1].UserName;
                         Surname = myuser[myuser.Count - 1].Surname;
                         Email = myuser[myuser.Count - 1].Email;
@@ -215,12 +223,16 @@ namespace Adapter.ViewModels
                     else if (XMLWriterChecked)
                     {
                         XML xml = new XML();
-                        xml.Write(allUsers);
+                        adapter = new XmlAdapter(xml);
+                        Application app = new Application(adapter);
+                        adapter.Write(allUsers);
                     }
                     else
                     {
                         XML xml = new XML();
-                        var myuser = xml.Read();
+                        adapter = new XmlAdapter(xml);
+                        Application app = new Application(adapter);
+                        var myuser=adapter.Read();
                         UserName = myuser[myuser.Count - 1].UserName;
                         Surname = myuser[myuser.Count - 1].Surname;
                         Email = myuser[myuser.Count - 1].Email;
