@@ -58,6 +58,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="MyAdapter\MyAdapter.cs" />
     <Compile Include="Commands\RelayCommand.cs" />
     <Compile Include="Helpers\FileHelper.cs" />
     <Compile Include="Models\User.cs" />
